@@ -21,11 +21,13 @@ Package.resolved
 
 # Build outputs
 DerivedData/
+build/
 *.app
 *.dSYM.zip
 *.dSYM
 *.ipa
 *.hmap
+*.dmg
 
 # Playgrounds
 timeline.xctimeline

@@ -16,6 +16,8 @@
 		1000000000000012 /* CGSPrivate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000012 /* CGSPrivate.swift */; };
 		1000000000000020 /* ButtonInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000020 /* ButtonInterceptor.swift */; };
 		1000000000000021 /* ActionExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000021 /* ActionExecutor.swift */; };
+		EB7A718F2F13786800C56C8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB7A718D2F1375D600C56C8E /* Assets.xcassets */; };
+		EB7A71932F13790600C56C8E /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = EB7A71902F13789600C56C8E /* AppIcon.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		2000000000000022 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2000000000000023 /* com.localmouse.helper.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.localmouse.helper.plist; sourceTree = "<group>"; };
 		3000000000000001 /* LocalMouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LocalMouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB7A718D2F1375D600C56C8E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EB7A71902F13789600C56C8E /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,8 @@
 		5000000000000001 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				EB7A71912F13789600C56C8E /* Resources */,
+				EB7A718D2F1375D600C56C8E /* Assets.xcassets */,
 				2000000000000001 /* LocalMouseApp.swift */,
 				5000000000000005 /* Views */,
 				2000000000000005 /* Info.plist */,
@@ -120,6 +126,14 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		EB7A71912F13789600C56C8E /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EB7A71902F13789600C56C8E /* AppIcon.icns */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -129,6 +143,7 @@
 			buildPhases = (
 				8000000000000001 /* Sources */,
 				4000000000000001 /* Frameworks */,
+				EB7A718E2F13785400C56C8E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -171,6 +186,18 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EB7A718E2F13785400C56C8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB7A71932F13790600C56C8E /* AppIcon.icns in Resources */,
+				EB7A718F2F13786800C56C8E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8000000000000001 /* Sources */ = {
@@ -315,10 +342,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -344,10 +372,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
