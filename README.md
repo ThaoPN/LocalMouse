@@ -1,5 +1,29 @@
 # LocalMouse
 
+> **The Tale of the $100 Paperweight**
+>
+> It's a beautiful Monday morning. You're coding. Life is good. You reach for your Logitech M650's middle button to open Mission Control.
+>
+> *Click.*
+>
+> Nothing.
+>
+> *Click side button to switch desktop spaces.*
+>
+> Still nothing.
+>
+> You open Logi Options+. The app opens. The loading indicator spins. And spins. And spins...
+>
+> Still spinning.
+>
+> It's been 5 minutes. Still spinning.
+>
+> **Your $100 mouse just became a $20 mouse because Logitech's servers are taking a coffee break.**
+>
+> Welcome to 2024, where your mouse needs cloud permission to... click buttons. 🤦
+
+---
+
 ## Because Your Mouse Shouldn't Need Permission From The Cloud
 
 Tired of your $100 mouse becoming a paperweight every time Logitech's servers decide to take a coffee break?
