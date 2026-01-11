@@ -143,7 +143,17 @@ swift run LocalMouseHelper  # Run helper directly for testing
 
 ### Troubleshooting
 
-**"Developer cannot be verified"**
+**"Developer cannot be verified" or "App from unidentified developer"**
+
+If you downloaded a pre-built release and macOS blocks it, run this command in Terminal:
+
+```bash
+xattr -cr /Applications/LocalMouse.app
+```
+
+This removes the quarantine attribute. Then try opening the app again.
+
+Alternatively:
 - Go to **System Settings → Privacy & Security**
 - Click "Open Anyway" next to the LocalMouse warning
 
