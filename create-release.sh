@@ -8,11 +8,13 @@ echo "🔨 Building LocalMouse..."
 rm -rf build
 rm -f LocalMouse*.dmg
 
-# Build release
+# Build release (Universal Binary for Intel + Apple Silicon)
 xcodebuild -project LocalMouse.xcodeproj \
   -scheme LocalMouse \
   -configuration Release \
   -derivedDataPath ./build \
+  ARCHS="x86_64 arm64" \
+  ONLY_ACTIVE_ARCH=NO \
   clean build
 
 APP_PATH="./build/Build/Products/Release/LocalMouse.app"
