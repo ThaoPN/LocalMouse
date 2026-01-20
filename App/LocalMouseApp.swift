@@ -25,16 +25,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Create main window but don't show it yet
         createMainWindow()
 
-        // Check if launched at login (no windows should be shown)
-        let launchedAtLogin = UserDefaults.standard.bool(forKey: "launchedAtLogin")
+        // Check if this is the first launch
+        let isFirstLaunch = !UserDefaults.standard.bool(forKey: "hasLaunchedBefore")
 
-        if launchedAtLogin {
-            // Hide dock icon when launched at login
-            NSApp.setActivationPolicy(.accessory)
+        // Detect if launched at login using NSAppleEventManager
+        let launchedAtLogin = wasLaunchedAtLogin()
+
+        // Determine whether to show window
+        let shouldShowWindow: Bool
+        if isFirstLaunch {
+            // First launch: always show window for setup/onboarding
+            shouldShowWindow = true
+            UserDefaults.standard.set(true, forKey: "hasLaunchedBefore")
+            print("[LocalMouse] First launch - showing welcome window")
+        } else if launchedAtLogin {
+            // Launched at login: don't show window, start silently
+            shouldShowWindow = false
+            print("[LocalMouse] Launched at login - starting in menu bar mode")
         } else {
-            // Normal launch - show window
+            // Manual launch (not first time): show window
+            shouldShowWindow = true
+            print("[LocalMouse] Manual launch - showing main window")
+        }
+
+        if shouldShowWindow {
+            // Show dock icon and window
             NSApp.setActivationPolicy(.regular)
             mainWindow?.makeKeyAndOrderFront(nil)
+        } else {
+            // Hide dock icon when launched at login
+            NSApp.setActivationPolicy(.accessory)
         }
 
         // Listen for window notifications
@@ -271,6 +291,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private var hasPromptedForAccessibility = false
+
+    /// Detect if app was launched at login using NSAppleEventManager
+    /// This is the recommended approach for detecting login item launches
+    /// Reference: https://hisaac.net/blog/how-to-detect-if-your-macos-app-was-launched-as-a-login-item/
+    private func wasLaunchedAtLogin() -> Bool {
+        // Check if we have a current Apple event
+        guard let event = NSAppleEventManager.shared().currentAppleEvent else {
+            return false
+        }
+
+        // Check if this is an OpenApplication event launched as a login item
+        return event.eventID == kAEOpenApplication
+            && event.paramDescriptor(forKeyword: keyAEPropData)?.enumCodeValue == keyAELaunchedAsLogInItem
+    }
 
     private func startHelper() {
         // Debug: Print bundle ID
