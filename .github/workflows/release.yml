@@ -1,0 +1,75 @@
+name: Build and Release DMG
+
+on:
+  release:
+    types: [created, published]
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  build-and-release:
+    runs-on: macos-14  # macOS with Apple Silicon
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build Universal Binary
+        run: |
+          xcodebuild \
+            -project LocalMouse.xcodeproj \
+            -scheme LocalMouse \
+            -configuration Release \
+            -derivedDataPath build \
+            -arch arm64 -arch x86_64 \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Prepare app for DMG
+        run: |
+          mkdir -p dmg_temp
+          cp -R build/Build/Products/Release/LocalMouse.app dmg_temp/
+
+          # Create Applications symlink for easy installation
+          ln -s /Applications dmg_temp/Applications
+
+      - name: Create DMG
+        run: |
+          # Get version from git tag or use "dev"
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [ -z "$VERSION" ] || [ "$VERSION" = "$GITHUB_REF_NAME" ]; then
+            VERSION="dev"
+          fi
+
+          DMG_NAME="LocalMouse-${VERSION}.dmg"
+
+          # Create DMG using hdiutil
+          hdiutil create -volname "LocalMouse" \
+            -srcfolder dmg_temp \
+            -ov -format UDZO \
+            "$DMG_NAME"
+
+          echo "DMG_PATH=$DMG_NAME" >> $GITHUB_ENV
+          echo "Created DMG: $DMG_NAME"
+
+      - name: Upload DMG to Release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ env.DMG_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload DMG as Artifact (for manual runs)
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: LocalMouse-DMG
+          path: ${{ env.DMG_PATH }}
+          retention-days: 30

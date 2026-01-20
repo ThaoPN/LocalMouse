@@ -201,6 +201,65 @@ All configuration is stored in:
 
 No servers. No cloud. No BS.
 
+## Release Process
+
+### Creating a Release with Automatic DMG Generation
+
+LocalMouse uses GitHub Actions to automatically build and attach DMG installers to releases.
+
+#### Option 1: GitHub Web Interface (Recommended)
+
+1. Go to your repository on GitHub
+2. Click "Releases" → "Draft a new release"
+3. Click "Choose a tag" → Type a new version tag (e.g., `v1.0.0`)
+4. Click "Create new tag on publish"
+5. Fill in the release title and description
+6. Click "Publish release"
+
+**The DMG will be automatically built and attached to the release within a few minutes!**
+
+#### Option 2: Command Line with GitHub CLI
+
+```bash
+# Create and push a tag
+git tag v1.0.0
+git push origin v1.0.0
+
+# Create release (DMG will be built automatically)
+gh release create v1.0.0 --title "v1.0.0" --notes "Release notes here"
+```
+
+#### Option 3: Manual DMG Creation (Local Testing)
+
+```bash
+# Build the app first
+xcodebuild -project LocalMouse.xcodeproj \
+  -scheme LocalMouse \
+  -configuration Release \
+  -arch arm64 -arch x86_64 \
+  build
+
+# Create DMG using the script
+./scripts/create-dmg.sh v1.0.0
+```
+
+### What Happens Automatically
+
+When you create a GitHub release:
+1. GitHub Actions triggers the build workflow
+2. App is built as Universal Binary (Intel + Apple Silicon)
+3. DMG installer is created with drag-to-Applications support
+4. DMG is automatically uploaded to the release
+5. Users can download and install directly
+
+### Manual Workflow Trigger
+
+You can also manually trigger the build workflow:
+1. Go to "Actions" tab on GitHub
+2. Select "Build and Release DMG"
+3. Click "Run workflow"
+4. The DMG will be uploaded as an artifact (not attached to a release)
+
 ## License
 
 MIT - Do whatever you want with it.
