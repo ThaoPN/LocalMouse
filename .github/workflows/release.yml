@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-release:
     runs-on: macos-14  # macOS with Apple Silicon
+    permissions:
+      contents: write  # Required to upload assets to releases
 
     steps:
       - name: Checkout code
