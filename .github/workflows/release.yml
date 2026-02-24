@@ -28,10 +28,19 @@ jobs:
             -configuration Release \
             -derivedDataPath build \
             -arch arm64 -arch x86_64 \
+            ONLY_ACTIVE_ARCH=NO \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Verify Universal Binary
+        run: |
+          BINARY="build/Build/Products/Release/LocalMouse.app/Contents/MacOS/LocalMouse"
+          echo "Binary architectures:"
+          lipo -info "$BINARY"
+          # Fail if x86_64 is missing
+          lipo -info "$BINARY" | grep -q x86_64 || (echo "ERROR: x86_64 arch missing!" && exit 1)
 
       - name: Prepare app for DMG
         run: |
