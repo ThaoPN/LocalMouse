@@ -176,6 +176,7 @@ public final class ButtonInterceptor {
             // Update state
             state.isPressed = false
             state.lastClickTime = now
+            state.clickCount = 0
             clickStates[button] = state
 
             // Find and execute matching action
