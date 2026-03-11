@@ -91,9 +91,21 @@ ActionExecutor.execute (trigger system hotkey, keyboard shortcut, etc.)
 
 ## Installation & Building
 
-### For Users (No Apple Developer Account Required)
+### Quick Install (Recommended)
 
-If you don't have an Apple Developer account, you can still build and run LocalMouse using a free Apple ID:
+Run this in Terminal — downloads the latest release, installs to `/Applications`, and handles all signing automatically:
+
+```bash
+curl -sL https://raw.githubusercontent.com/ThaoPN/LocalMouse/main/install.sh | bash
+```
+
+Then grant Accessibility permission: **System Settings → Privacy & Security → Accessibility → enable LocalMouse**
+
+---
+
+### For Users (Build from Source)
+
+If you prefer to build from source using a free Apple ID:
 
 1. **Clone the repository**
    ```bash
@@ -145,17 +157,12 @@ swift run LocalMouseHelper  # Run helper directly for testing
 
 **"Developer cannot be verified" or "App from unidentified developer"**
 
-If you downloaded a pre-built release and macOS blocks it, run this command in Terminal:
+Use the install script above — it handles this automatically. Or run manually:
 
 ```bash
-xattr -cr /Applications/LocalMouse.app
+sudo /usr/bin/xattr -rd com.apple.quarantine /Applications/LocalMouse.app
+codesign --force --deep --sign - /Applications/LocalMouse.app
 ```
-
-This removes the quarantine attribute. Then try opening the app again.
-
-Alternatively:
-- Go to **System Settings → Privacy & Security**
-- Click "Open Anyway" next to the LocalMouse warning
 
 **Code signing fails**
 - Make sure you've changed the Bundle Identifier to something unique
