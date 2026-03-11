@@ -10,14 +10,11 @@ public final class ButtonInterceptor {
     private var runLoopSource: CFRunLoopSource?
     private var isRunning = false
 
-    /// Click state tracking for double-click and hold detection
+    /// Click state tracking for hold detection
     private var clickStates: [MouseButton: ClickState] = [:]
 
     /// Hold detection threshold (in seconds)
     private let holdThreshold: TimeInterval = 0.3
-
-    /// Double-click threshold (in seconds)
-    private let doubleClickThreshold: TimeInterval = 0.3
 
     private init() {}
 
@@ -132,57 +129,31 @@ public final class ButtonInterceptor {
         let now = Date()
 
         if isDown {
-            // Button pressed
-            let state = clickStates[button] ?? ClickState()
-
-            // Only track double-click if there's a mapping for it
-            let hasDoubleClickMapping = hasMapping(button: button, clickType: .doubleClick, modifiers: modifiers)
-            let isDoubleClick = hasDoubleClickMapping &&
-                (state.lastClickTime.map { now.timeIntervalSince($0) < doubleClickThreshold } ?? false)
-
-            // Update state
-            var newState = state
+            var newState = clickStates[button] ?? ClickState()
             newState.isPressed = true
             newState.pressTime = now
-            newState.clickCount = isDoubleClick ? state.clickCount + 1 : 1
             newState.modifiers = modifiers
             clickStates[button] = newState
 
-            // Schedule hold detection
             scheduleHoldDetection(button: button, pressTime: now)
-
-            // Don't trigger action on down - wait for up or hold
             return .suppress
 
         } else {
-            // Button released
             guard var state = clickStates[button], state.isPressed else {
                 return .passthrough
             }
 
             let pressDuration = now.timeIntervalSince(state.pressTime ?? now)
-            let clickType: ClickType
+
+            state.isPressed = false
+            clickStates[button] = state
 
             if pressDuration >= holdThreshold {
                 // Already handled by hold detection
-                state.isPressed = false
-                state.lastClickTime = now
-                clickStates[button] = state
                 return .suppress
-            } else if state.clickCount >= 2 {
-                clickType = .doubleClick
-            } else {
-                clickType = .click
             }
 
-            // Update state
-            state.isPressed = false
-            state.lastClickTime = now
-            state.clickCount = 0
-            clickStates[button] = state
-
-            // Find and execute matching action
-            let trigger = ButtonTrigger(button: button, clickType: clickType, modifiers: state.modifiers)
+            let trigger = ButtonTrigger(button: button, clickType: .click, modifiers: state.modifiers)
             return executeAction(for: trigger)
         }
     }
@@ -206,16 +177,6 @@ public final class ButtonInterceptor {
     }
 
     // MARK: - Action Execution
-
-    private func hasMapping(button: MouseButton, clickType: ClickType, modifiers: KeyboardModifiers) -> Bool {
-        let mappings = ConfigManager.shared.getMappings()
-        return mappings.contains {
-            $0.isEnabled &&
-            $0.trigger.button == button &&
-            $0.trigger.clickType == clickType &&
-            $0.trigger.modifiers == modifiers
-        }
-    }
 
     private func executeAction(for trigger: ButtonTrigger) -> EventResult {
         let mappings = ConfigManager.shared.getMappings()
@@ -243,8 +204,6 @@ public final class ButtonInterceptor {
 private struct ClickState {
     var isPressed: Bool = false
     var pressTime: Date?
-    var lastClickTime: Date?
-    var clickCount: Int = 0
     var modifiers: KeyboardModifiers = []
 }
 
