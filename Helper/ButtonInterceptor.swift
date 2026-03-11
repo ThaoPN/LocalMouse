@@ -135,8 +135,10 @@ public final class ButtonInterceptor {
             // Button pressed
             let state = clickStates[button] ?? ClickState()
 
-            // Check for double-click
-            let isDoubleClick = state.lastClickTime.map { now.timeIntervalSince($0) < doubleClickThreshold } ?? false
+            // Only track double-click if there's a mapping for it
+            let hasDoubleClickMapping = hasMapping(button: button, clickType: .doubleClick, modifiers: modifiers)
+            let isDoubleClick = hasDoubleClickMapping &&
+                (state.lastClickTime.map { now.timeIntervalSince($0) < doubleClickThreshold } ?? false)
 
             // Update state
             var newState = state
@@ -204,6 +206,16 @@ public final class ButtonInterceptor {
     }
 
     // MARK: - Action Execution
+
+    private func hasMapping(button: MouseButton, clickType: ClickType, modifiers: KeyboardModifiers) -> Bool {
+        let mappings = ConfigManager.shared.getMappings()
+        return mappings.contains {
+            $0.isEnabled &&
+            $0.trigger.button == button &&
+            $0.trigger.clickType == clickType &&
+            $0.trigger.modifiers == modifiers
+        }
+    }
 
     private func executeAction(for trigger: ButtonTrigger) -> EventResult {
         let mappings = ConfigManager.shared.getMappings()
